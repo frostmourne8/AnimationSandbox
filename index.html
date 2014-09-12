@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Animation Sandbox</title>
+
+    <link href="styles.css" rel="stylesheet" type="text/css">
+    <link href="animations.css" rel="stylesheet" type="text/css">
+</head>
+
+<body onload="openMenu()">
+
+<div id="radial_menu" class="centered">
+    <div class="profile_image ellipse"></div>
+</div>
+
+<script>
+
+    for(var i = 0;i < 16;i++) {
+        addMenuItem();
+    }
+
+    function addMenuItem() {
+        var item = document.createElement("div");
+        item.className = 'menu_item centered';
+
+        var icon = document.createElement("img");
+        icon.className = 'menu_item_icon circle';
+        icon.src = 'images/Icon.png';
+        item.appendChild(icon);
+
+        document.getElementById("radial_menu").appendChild(item);
+    }
+
+    function openMenu() {
+        var nodeList = document.querySelectorAll('.menu_item');
+        var degIncrement = 360 / nodeList.length;
+
+        for (var i = 0; i < nodeList.length; i++) {
+            var rotation = 90 + degIncrement * i;
+            var transform = 'rotate(' + rotation + 'deg) translate(-275px) rotate(-' + rotation + 'deg)';
+
+            nodeList[i].style.transform = transform;
+        }
+    }
+
+</script>
+
+</body>
+</html>
