@@ -16,29 +16,94 @@
 
 <script>
 
-    for(var i = 0;i < 16;i++) {
-        addMenuItem();
+    var subMenuAngleOffset = 40;
+    var items = {length: 16}; //I don't care about contents, just length;
+
+    var MathUtils = {
+        getAngleForItemIndex: function(i) {
+            var degIncrement = 360 / items.length;
+            return 90 + degIncrement * i;
+        },
+
+        getMenuTransform: function(degrees, radius) {
+            return 'rotate(' + degrees + 'deg) translate(-' + radius + 'px) rotate(-' + degrees + 'deg)';
+        }
     }
 
-    function addMenuItem() {
+    for(var i = 0;i < items.length;i++) {
+        addMenuItem(i);
+    }
+
+    function addMenuItem(i) {
         var item = document.createElement("div");
-        item.className = 'menu_item centered';
+        item.className = 'menu_item menu_item_animation centered';
+        item.angle = MathUtils.getAngleForItemIndex(i);
+        item.openSubMenu = openSubMenu;
+        item.closeSubMenu = closeSubMenu;
 
         var icon = document.createElement("img");
         icon.className = 'menu_item_icon circle';
         icon.src = 'images/Icon.png';
+        icon.onclick = function(e) {
+            e.target.parentNode.openSubMenu();
+        }
+
+        addSubItem(item);
+        addSubItem(item);
+
         item.appendChild(icon);
 
         document.getElementById("radial_menu").appendChild(item);
     }
 
-    function openMenu() {
-        var nodeList = document.querySelectorAll('.menu_item');
-        var degIncrement = 360 / nodeList.length;
+    function addSubItem(item) {
+        var subItem = document.createElement("div");
+        subItem.className = 'menu_item sub_menu_item_animation centered';
+        subItem.angle = item.firstChild ? item.angle - subMenuAngleOffset : item.angle + subMenuAngleOffset;
+        subItem.style.opacity = 0.0;
 
+        var icon = document.createElement("img");
+        icon.className = 'menu_item_icon circle';
+        icon.src = 'images/Icon.png';
+
+        subItem.appendChild(icon);
+        item.appendChild(subItem);
+
+        if(!item.subItems) {item.subItems = [subItem];}
+        else {item.subItems.push(subItem);}
+
+        return subItem;
+    }
+
+    function openSubMenu() {
+        var subItems = this.subItems;
+        for(var i = 0;i < subItems.length;i++) {
+            var subItem = subItems[i];
+            subItem.style.opacity = 1.0;
+            subItem.style.transform = MathUtils.getMenuTransform(subItem.angle, 60);
+        }
+
+        var nodeList = document.querySelectorAll('.menu_item_animation');
         for (var i = 0; i < nodeList.length; i++) {
-            var rotation = 90 + degIncrement * i;
-            var transform = 'rotate(' + rotation + 'deg) translate(-275px) rotate(-' + rotation + 'deg)';
+            var item = nodeList[i];
+            if(item != this) {item.closeSubMenu();}
+        }
+    }
+
+    function closeSubMenu() {
+        var subItems = this.subItems;
+        for(var i = 0;i < subItems.length;i++) {
+            var subItem = subItems[i];
+            subItem.style.opacity = 0.0;
+            subItem.style.transform = MathUtils.getMenuTransform(subItem.angle, 0);
+        }
+    }
+
+    function openMenu() {
+        var nodeList = document.querySelectorAll('.menu_item_animation');
+        for (var i = 0; i < nodeList.length; i++) {
+            var angle = nodeList[i].angle;
+            var transform = MathUtils.getMenuTransform(angle, 285);
 
             nodeList[i].style.transform = transform;
         }

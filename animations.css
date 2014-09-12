@@ -1,6 +1,10 @@
-.menu_item {
+.menu_item_animation {
     transition: transform 3s ease;
-    transform: rotate(90deg) translateX(-275px) rotate(-90deg);
+    transform: rotate(90deg) translateX(-285px) rotate(-90deg);
+}
+
+.sub_menu_item_animation {
+    transition: transform .5s ease, opacity .5s;
 }
 
 .menu_item_icon {
