@@ -1,5 +1,5 @@
 .menu_item_animation {
-    transition: transform 3s ease;
+    transition: transform 1.5s ease;
     transform: rotate(90deg) translateX(-285px) rotate(-90deg);
 }
 
